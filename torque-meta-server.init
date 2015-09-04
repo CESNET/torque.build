@@ -1,0 +1,70 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          pbs_server
+# Required-Start:    $remote_fs $local_fs $named $network $time
+# Required-Stop:     $remote_fs $local_fs $named $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start and stop the PBS server
+# Description:       PBS is a versatile batch system for SMPs and clusters.
+#                    This script controls the server process.
+### END INIT INFO
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+DAEMON=/usr/sbin/pbs_server
+NAME=pbs_server
+DESC="Torque batch queue server"
+PIDFILE=/var/spool/torque/server_priv/server.lock
+
+test -x $DAEMON || exit 0
+
+# Include torque defaults if available
+if [ -f /etc/default/$NAME ]; then
+	. /etc/default/$NAME
+elif [ -f /etc/default/torque-server ]; then
+	. /etc/default/torque-server
+elif [ -f /etc/default/torque ]; then
+	. /etc/default/torque
+fi
+
+# Load lsb functions
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+	log_daemon_msg "Starting $DESC"
+
+	if [ ! -r /var/spool/torque/server_priv/serverdb ]; then
+		DAEMON_SERVER_OPTS="-t create $DAEMON_SERVER_OPTS"
+	fi
+	log_progress_msg "$NAME"
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_SERVER_OPTS
+	log_end_msg $?
+	;;
+
+  stop)
+	log_daemon_msg "Stopping $DESC" "$NAME"
+	qterm -t quick
+	start-stop-daemon --stop --retry 3600 --quiet --pidfile $PIDFILE --exec $DAEMON
+	log_end_msg 0 
+	;;
+
+  reload|force-reload)
+  	log_daemon_msg "Reloading $DESC configuration files" "$NAME"
+	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --exec $DAEMON
+	log_end_msg $?
+  ;;
+
+  restart)
+  	$0 stop && sleep 5 && $0 start
+	;;
+
+  *)
+	N=/etc/init.d/`basename $0`
+	echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

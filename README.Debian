@@ -1,0 +1,149 @@
+Torque was package for many distributions already. And it happened,
+that slightly different approaches were taken for Ubuntu and Debian.
+This package is the result of a joint effort of Ubuntu developer Morten
+Kjeldgaard and Debian developer Steffen Moeller to come up with packaging
+strategy that both distributions can easily share. The Debian packaging
+was originally crafted by Daniel Bayer.
+
+The most recent changes are being introduced by Dominique Belhachemi,
+who uses Torque as the basis for his Google Summer of Code project
+over mid 2010.
+
+
+WIKI
+====
+Additional information can be found in our wiki:
+
+   *  http://wiki.debian.org/Torque *
+
+
+
+Short and incomplete pointers to setting up the torque batch system
+===================================================================
+
+The default torque server name is "torqueserver". This name is defined in
+the file `/etc/torque/server_name`. You can either change this, add
+respective entries to /etc/hosts or, if you have access to the nameserver,
+add a torqueserver CNAME record pointing to the actual machine. To change
+that name later is some error-prone process that you might want to avoid,
+since all users need to update their SSH known hosts entries.
+
+This README will describe a simple setup with a single head node that
+does not itself act as a compute server. Submitted jobs will be
+executed on distinct compute nodes.
+
+In our setup, users have their home directories on NFS mounted shares
+that are accesible from all workstations and also the compute nodes
+(via autofs).
+
+For the system to work smoothly, it is important that you have set up
+passwordless ssh, so compute nodes can copy the batch queue log files back
+to the users' disk area. Changing the name of the server will impose the
+need to reperform that SSH setup.
+
+Head node
+---------
+
+On the head node, you need to run the torque-server and torque-scheduler.
+The scheduler is a simple one, you can substitute it with a more
+sophisticated one like maui, also distributed from
+http://www.clusterresources.com/[clusterressources.org] (unfortunately, maui
+has a license too strict to distribute as packages.)
+
+Compute node
+------------
+
+On each of the compute nodes, you need to install at least torque-mom.
+
+Submit hosts
+------------
+
+You also need a number of submit hosts, that may or may not include the
+head and compute nodes. On these, you need to install the software in
+torque-client. In our case, users do their work on a desktop workstation in
+their offices or in the computing room. You can submit jobs from each of
+these, these jobs are forwarded to the head node (torque-server) and there
+scheduled for execution.
+
+Add to /etc/services
+--------------------
+
+If you want to have names associated with the ports that are used by 
+torque, you may want to patch /etc/services:
+
+
+if grep -q '^pbs' /etc/services; then
+ echo "/etc/services already offers a pbs entry. Not touched: "
+ grep ^pbs /etc/services
+else
+ cat >>/etc/services <<EOPBS
+#(torque
+# Standard PBS services
+pbs           15001/tcp           # pbs server (pbs_server)
+pbs           15001/udp           # pbs server (pbs_server)
+pbs_mom       15002/tcp           # mom to/from server
+pbs_mom       15002/udp           # mom to/from server
+pbs_resmom    15003/tcp           # mom resource management requests
+pbs_resmom    15003/udp           # mom resource management requests
+pbs_sched     15004/tcp           # scheduler
+pbs_sched     15004/udp           # scheduler
+#)
+EOPBS
+fi
+
+If you ever need to remove this entry again, run this script:
+
+if grep -q '^pbs' /etc/services; then
+ target=/etc/services
+ 
+ if ! grep -q '#(torque' $target; then
+  echo "Please remove manually, the lines seem to have been changed."
+  exit -1
+ fi
+ echo -n "unpatching $target... "
+ sed -i.bak -r '/#\(torque/,/#\)/d' $target 
+ echo done
+else
+ echo "No entry for pbs found in /etc/services. Nothing to do."
+fi
+
+
+Create a batch server on localhost
+----------------------------------
+
+You can run a batch server on a single host. This can be useful if you 
+want to try out the software, or if you regularly run many jobs and 
+you need some way of keeping track of them.
+
+You need to install several of the packages:
+
+ sudo apt-get install torque-mom torque-server torque-client torque-scheduler
+
+and then run the following script (as root)
+
+#! /bin/sh
+update-rc.d pbs_mom defaults
+update-rc.d pbs_server defaults
+update-rc.d pbs_sched defaults
+hostname --long > /var/lib/torque/server_priv/nodes
+hostname --long > /var/lib/torque/server_name
+hostname --long > /var/lib/torque/mom_priv/config
+ps aux | grep -v grep | grep -q pbs_server || pbs_server -t create
+qmgr -c "s s scheduling=true"
+qmgr -c "c q batch queue_type=execution"
+qmgr -c "s q batch started=true"
+qmgr -c "s q batch enabled=true"
+qmgr -c "s q batch resources_default.nodes=1"
+qmgr -c "s q batch resources_default.walltime=3600"
+qmgr -c "s s default_queue=batch"
+invoke-rc.d restart
+invoke-rc.d restart
+invoke-rc.d restart
+qmgr -c "s n `/bin/hostname --long` state=free" -e
+
+and enjoy your very own batch server!
+
+Morten Kjeldgaard <mok@bioxray.au.dk>
+January 2008
+
+ -- Morten Kjeldgaard <mok@bioxray.au.dk>, Sat,  9 Feb 2008 23:01:19 +0100

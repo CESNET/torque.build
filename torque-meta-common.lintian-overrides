@@ -1,0 +1,2 @@
+torque-common: file-in-unusual-dir var/spool/torque/pbs_environment
+torque-common: file-in-unusual-dir var/spool/torque/server_name

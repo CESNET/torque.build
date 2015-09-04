@@ -1,0 +1,4 @@
+torque-scheduler: file-in-unusual-dir var/spool/torque/sched_priv/dedicated_time
+torque-scheduler: file-in-unusual-dir var/spool/torque/sched_priv/holidays
+torque-scheduler: file-in-unusual-dir var/spool/torque/sched_priv/resource_group.default
+torque-scheduler: file-in-unusual-dir var/spool/torque/sched_priv/sched_config

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+find /var/spool/torque/job_archive/ -name *.JB -size +0c | while read x; do 
+        new_path="$(dirname $x)/$(basename $x .JB).gz";
+	tmp_file=`mktemp -p $(dirname $x)` || exit 1;
+	printjob $x >$tmp_file;
+	if [ $? -ne 0 ]; then
+		echo "Couldn't convert $x.";
+		exit 1;
+	fi
+       	cat $tmp_file | gzip -9 -c - >$new_path;
+        rm -f $x;
+	rm -f $tmp_file;
+done

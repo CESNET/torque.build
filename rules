@@ -1,0 +1,191 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+CFLAGS += -std=gnu99 -D_GNU_SOURCE -D__STDC_FORMAT_MACROS
+CFLAGS += -D__TOLDGROUP -D__STDC_FORMAT_MACROS
+CXXFLAGS += -std=c++0x -D_GNU_SOURCE -D__STDC_FORMAT_MACROS
+
+PAM_DIR=/lib/security
+
+OPTIONS = GLITE_LOCATION=/usr CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs" \
+          --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
+          --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
+	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
+	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
+          --libdir=/usr/lib --with-glite-lb=/usr  --enable-silent-rules
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	if [ -x /usr/bin/dh_autotools-dev_updateconfig ]; then \
+	  dh_autotools-dev_updateconfig; \
+	fi
+	ln -sf $(CURDIR) /tmp/torque-src
+	mkdir -p debian/build/with-x
+	mkdir -p debian/build/without-x
+	cd debian/build/with-x && /tmp/torque-src/configure $(OPTIONS) \
+		--srcdir /tmp/torque-src \
+		--with-tcl=/usr/lib/tcl8.5 --with-tk=/usr/lib/tk8.5 \
+		--disable-server --disable-mom
+	cd debian/build/without-x && /tmp/torque-src/configure $(OPTIONS) \
+		--srcdir /tmp/torque-src \
+		--without-tcl --without-tclx --without-tk
+	touch $@
+
+#Architecture 
+build: build-arch
+
+build-arch: build-arch-stamp
+build-arch-stamp: configure
+	$(MAKE) -C debian/build/with-x
+	ln -s pbs_config.h $(CURDIR)/debian/build/without-x/src/include/config.h
+	$(MAKE) -C debian/build/without-x
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-arch-stamp build-indep-stamp configure-stamp
+	rm -rf debian/build
+	dh_clean
+	if [ -x /usr/bin/dh_autotools-dev_restoreconfig ]; then \
+	  dh_autotools-dev_restoreconfig; \
+	fi
+	rm -f torque-2.4.8+dfsg
+
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+#	mkdir -p $(CURDIR)/debian/torque-meta-common/var/spool/torque/
+#	ln -s /etc/torque/server_name $(CURDIR)/debian/torque-meta-common/var/spool/torque/server_name
+
+	mkdir -p $(CURDIR)/debian/torque-meta-server/etc/init.d
+	mkdir -p $(CURDIR)/debian/torque-meta-scheduler/etc/init.d
+
+########libtorque-meta2
+	$(MAKE) -C debian/build/without-x install_lib DESTDIR=$(CURDIR)/debian/libtorque-meta2
+#	mv $(CURDIR)/debian/libtorque-meta2/$(PAM_DIR)/pam_pbssimpleauth.so $(CURDIR)/debian/torque-meta-pam/$(PAM_DIR)/pam_pbssimpleauth.so
+	rm -f $(CURDIR)/debian/libtorque-meta2/usr/lib/libtorque.la
+	rm -f $(CURDIR)/debian/libtorque-meta2/usr/lib/libtorque.so
+
+########libtorque-meta2-dev
+	$(MAKE) -C debian/build/without-x install_devel DESTDIR=$(CURDIR)/debian/libtorque-meta2-dev
+	sed -i -e"s/^dependency_libs.*/dependency_libs=''/" $(CURDIR)/debian/libtorque-meta2-dev/usr/lib/libtorque.la
+	rm -f $(CURDIR)/debian/libtorque-meta2-dev/usr/lib/libtorque.so.*
+
+########torque-meta-server & torque-meta-scheduler
+	$(MAKE) -C debian/build/without-x install_server DESTDIR=$(CURDIR)/debian/torque-meta-server
+	
+	[ -d $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv ] && rm -r $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv
+	mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/sched_priv $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/
+
+	mv $(CURDIR)/debian/torque-meta-server/usr/sbin/qschedd $(CURDIR)/debian/torque-meta-server/usr/sbin/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/usr/sbin/
+#	mv $(CURDIR)/debian/torque-meta-server/etc/init.d/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/etc/init.d
+
+	# redundant with server package -> mv to -common 
+	if [ -r $(CURDIR)/debian/torque-meta-server/var/spool/torque/pbs_environment ]; then \
+		mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/pbs_environment \
+		      $(CURDIR)/debian/torque-meta-common/var/spool/torque/pbs_environment; \
+	fi
+	rm -rf $(CURDIR)/debian/torque-meta-server/usr/lib
+
+########torque-meta-pam
+	$(MAKE) -C debian/build/without-x install_pam DESTDIR=$(CURDIR)/debian/torque-meta-pam
+#	rm -rf $(CURDIR)/debian/torque-meta-pam/$(PAM_DIR)/*.la
+
+########torque-meta-client
+	$(MAKE) -C debian/build/without-x install_clients DESTDIR=$(CURDIR)/debian/torque-meta-client
+	rm -rf $(CURDIR)/debian/torque-meta-client/usr/lib
+	cp $(CURDIR)/contrib/pbstop $(CURDIR)/debian/torque-meta-client/usr/bin
+	chmod 755 $(CURDIR)/debian/torque-meta-client/usr/bin/pbstop
+	if [ -r $(CURDIR)/debian/torque-meta-client/var/spool/torque/server_name ]; then \
+		mv $(CURDIR)/debian/torque-meta-client/var/spool/torque/server_name $(CURDIR)/debian/torque-meta-common/var/spool/torque/server_name; \
+	fi
+
+	$(MAKE) -C debian/build/with-x install_clients DESTDIR=$(CURDIR)/debian/torque-meta-client-x11
+	$(MAKE) -C debian/build/with-x install_gui DESTDIR=$(CURDIR)/debian/torque-meta-client-x11
+	rm -rf $(CURDIR)/debian/torque-meta-client-x11/usr/lib/libtorque.*
+	rm -f $(CURDIR)/debian/torque-meta-client-x11/var/spool/torque/server_name
+	cp $(CURDIR)/contrib/pbstop $(CURDIR)/debian/torque-meta-client-x11/usr/bin
+	chmod 755 $(CURDIR)/debian/torque-meta-client/usr/bin/pbstop
+
+########torque-meta-mom
+	mkdir -p $(CURDIR)/debian/torque-meta-mom/etc/init.d
+	$(MAKE) -C debian/build/without-x install_mom DESTDIR=$(CURDIR)/debian/torque-meta-mom
+	rm -rf $(CURDIR)/debian/torque-meta-mom/usr/lib $(CURDIR)/debian/torque-meta-mom/var/spool/torque/server_name $(CURDIR)/debian/torque-meta-mom/etc/torque/server_name
+	rm -f $(CURDIR)/debian/torque-meta-mom/usr/sbin/momctl
+
+	# redundant with server package -> mv to -common 
+	if [ -r $(CURDIR)/debian/torque-meta-mom/var/spool/torque/pbs_environment ]; then \
+		mv $(CURDIR)/debian/torque-meta-mom/var/spool/torque/pbs_environment \
+		      $(CURDIR)/debian/torque-meta-common/var/spool/torque/pbs_environment; \
+	fi
+
+	if [ ! -r $(CURDIR)/debian/torque-meta-common/var/spool/torque/pbs_environment ]; then \
+	        touch $(CURDIR)/debian/torque-meta-common/var/spool/torque/pbs_environment; \
+	fi
+
+########torque-meta-common
+        #  mv /etc/torque/server_name to torque-common
+	if [ -r $(CURDIR)/debian/torque-meta-client-x11/etc/torque/server_name ]; then \
+                mkdir -p $(CURDIR)/debian/torque-meta-common/etc/torque/; \
+                mv $(CURDIR)/debian/torque-meta-client-x11/etc/torque/server_name \
+                      $(CURDIR)/debian/torque-meta-common/etc/torque/server_name; \
+                rm -rf $(CURDIR)/debian/torque-meta-client-x11/etc/; \
+	fi
+	if [ -r $(CURDIR)/debian/torque-meta-client/etc/torque/server_name ]; then \
+                rm -f $(CURDIR)/debian/torque-meta-client/etc/torque/server_name; \
+	fi
+
+
+	$(MAKE) -C debian/build/without-x install_doc DESTDIR=$(CURDIR)/debian/tmp
+
+	dh_install
+
+
+binary-arch: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs CHANGELOG
+	dh_installdocs
+	dh_installexamples
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate	
+	dh_installinit -p torque-meta-mom --init-script=pbs_mom -r --no-start
+	dh_installinit -p torque-meta-server --init-script=pbs_server --no-start
+	dh_installinit -p torque-meta-scheduler --init-script=pbs_sched --no-start
+	dh_installcron
+#	dh_installinfo
+	dh_lintian
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress 
+	dh_fixperms -X pbs_iff -X /var/spool/torque/spool -X /var/spool/torque/undelivered
+	dh_makeshlibs -p libtorque-meta2 -V
+	dh_installdeb
+	dh_perl
+	dh_shlibdeps -l$(CURDIR)/debian/libtorque-meta2/usr/lib/ -L libtorque2 
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+
+binary: binary-arch
+
+.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch

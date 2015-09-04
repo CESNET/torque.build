@@ -1,0 +1,10 @@
+README.torque
+README.configure
+README.mpiexec
+torque.setup
+Release_Notes
+DEVELOPMENT
+CHANGELOG
+#doc/admin_guide.ps
+src/pam/README.pam
+contrib/README.pbstop

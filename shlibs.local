@@ -1,0 +1,8 @@
+libgssapi 4 libgssapi4-heimdal
+libroken 16 libroken16-heimdal
+libasn1 6 libasn1-6-heimdal
+libkrb5 17 libkrb5-17-heimdal
+libkafs 0 libkafs0-heimdal
+libkrb525 0 krb525
+libcom_err 2 libcomerr2
+libpbscache 1 libpbs-cache

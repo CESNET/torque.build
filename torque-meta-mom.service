@@ -1,0 +1,13 @@
+[Unit]
+Description=Torque MOM Daemon
+Requires=remote-fs.target local-fs.target named.target network.target homes.target
+Wants=magrathea-slave.target magrathea-master.target openafs-client.target perun-propagate.target
+After=remote-fs.target local-fs.target named.target network.target homes.target magrathea-slave.target magrathea-master.target openafs-client.target perun-propagate.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/pbs_mom
+PIDFile=/var/spool/torque/mom_priv/mom.lock
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,2 @@
+torque-mom: non-standard-dir-perm var/spool/torque/spool/ 1777 != 0755
+torque-mom: non-standard-dir-perm var/spool/torque/undelivered/ 1777 != 0755

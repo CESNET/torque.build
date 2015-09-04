@@ -1,0 +1,1 @@
+torque-client-x11: setuid-binary usr/sbin/pbs_iff 4755 root/root
