@@ -1,8 +1,8 @@
 [Unit]
 Description=Torque MOM Daemon
-Requires=remote-fs.target local-fs.target named.target network.target homes.target
-Wants=magrathea-slave.target magrathea-master.target openafs-client.target perun-propagate.target
-After=remote-fs.target local-fs.target named.target network.target homes.target magrathea-slave.target magrathea-master.target openafs-client.target perun-propagate.target
+#Requires=remote-fs.target local-fs.target named.target network.target homes.target
+#Wants=magrathea-slave.target magrathea-master.target openafs-client.target perun-propagate.target
+After=remote-fs.target local-fs.target named.target network.target homes.target magrathea-slave.service magrathea-master.service openafs-client.service perun-propagate.service
 
 [Service]
 Type=forking

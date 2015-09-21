@@ -1,11 +1,11 @@
 [Unit]
 Description=Torque Server
-Requires=remote-fs.target local-fs.target named.target network.target
+#Requires=remote-fs.target local-fs.target named.target network.target
 After=remote-fs.target local-fs.target named.target network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/pbs_server
+ExecStart=/usr/sbin/pbs_server.start
 ExecStop=/usr/bin/qmgr -t quick
 PIDFile=/var/spool/torque/server_priv/server.lock
 

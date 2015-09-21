@@ -1,7 +1,7 @@
 [Unit]
 Description=MetaCentrum Torque Scheduler
-Requires=local-fs.target named.target network.target pbs_server.target
-After=local-fs.target named.target network.target pbs_server.target
+#Requires=local-fs.target named.target network.target pbs_server.target
+After=local-fs.target named.target network.target pbs_server.service
 
 [Service]
 Type=forking
