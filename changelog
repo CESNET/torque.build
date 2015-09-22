@@ -1,3 +1,12 @@
+torque-meta (2.4.144+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] support for cgroups for job encapsulation & accounting
+  * [mom] export resource capacity TORQUE_RESC_CAPACITY_PROC, TORQUE_RESC_CAPACITY_MEM
+  * [server] asynchronous qstat support
+  * [package] split build configuration and debian 8 support
+
+ -- Simon Toth <simon@cesnet.cz>  Tue, 22 Sept 2015 12:05:00 +0100
+
 torque-meta (2.4.143+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] log server cycle length
