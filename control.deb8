@@ -11,9 +11,7 @@ Build-Depends: autotools-dev (>= 20100122.1~),
                openssh-client,
                tcl8.5-dev,
                tk8.5-dev,
-               heimdal-dev,
-               glite-lb-logger-dev,
-               libglite-lb-client-dev
+               heimdal-dev
 Standards-Version: 3.8.4
 DM-Upload-Allowed: yes
 XS-Autobuild: yes
@@ -41,7 +39,7 @@ Description: Torque Queueing System shared files
 Package: torque-meta-server
 Section: utils
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, glite-lb-logger, glite-lb-client, base-files (>= 6), libpbs-cache
+Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, base-files (>= 6), libpbs-cache
 Recommends: torque-meta-scheduler, torque-meta-client | torque-meta-client-x11
 Suggests: torque-meta-mom
 Conflicts: torque-client
@@ -99,9 +97,8 @@ Description: command line interface to Torque server
 Package: torque-meta-mom
 Section: utils
 Architecture: any
-Build-Depends: libglite-lb-client-dev
 Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, base-files (>= 6), pbs-cache-client
-Recommends: perun-slave-meta, glite-lb-logger
+Recommends: perun-slave-meta
 Conflicts: torque-mom
 Description: job execution engine for Torque batch system
  The TORQUE server dispatches jobs across physically separated
