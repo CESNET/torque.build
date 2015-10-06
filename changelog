@@ -1,3 +1,9 @@
+torque-meta (2.4.145+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] CGROUP fixes
+
+ -- Simon Toth <simon@cesnet.cz>  Tue, 6 Oct 2015 17:00:00 +0100
+
 torque-meta (2.4.144+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] support for cgroups for job encapsulation & accounting
