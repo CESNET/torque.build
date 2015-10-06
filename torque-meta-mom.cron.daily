@@ -1,5 +1,4 @@
 #!/bin/sh
 
 /usr/bin/find /var/spool/torque/mom_logs -type f -not -name \*.gz -not -name `/bin/date +%Y%m%d` -exec /bin/gzip -9 {} \;
-/usr/bin/find /var/spool/torque/mom_logs -type f -mtime +60 -name \*.gz -exec rm -f {} \; 
-/var/spool/torque/mom_scripts/pbs_get_cores
+/usr/bin/find /var/spool/torque/mom_logs -type f -mtime +60 -name \*.gz -exec rm -f {} \;
