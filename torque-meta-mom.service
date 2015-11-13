@@ -6,8 +6,18 @@ After=remote-fs.target local-fs.target named.target network.target homes.target 
 
 [Service]
 Type=forking
+LimitCORE=infinity
+LimitMEMLOCK=infinity
+LimitNOFILE=40000
+EnvironmentFile=/etc/default/pbs_mom
+ExecStartPre=/bin/sh /etc/default/pbs_mom
 ExecStart=/usr/sbin/pbs_mom
 PIDFile=/var/spool/torque/mom_priv/mom.lock
+Restart=on-failure
+KillMode=process
+StartLimitInterval=60
+StartLimitBurst=10
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
