@@ -1,3 +1,15 @@
+torque-meta (2.4.146+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] use memory utilization information from cgroup if available
+  * [server] imply property cgroup when -W cgroup=true is used
+  * [server] force correct storage of job comments on server restart
+  * [lib] async_write_with_timeout() will now correctly exit on timeout
+  * [lib] DIS_tcp_setup() now correctly falls back to original tcparraymax
+  * [mom] scratch_local() and scratch_ssd() now correctly handle popen errors
+  * [mom] memory+swap value now reported for cgroup-enabled jobs
+
+ -- Simon Toth <simon@cesnet.cz>  Wed, 18 Nov 2015 10:00:00 +0100
+
 torque-meta (2.4.145+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] CGROUP fixes

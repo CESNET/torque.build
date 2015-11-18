@@ -18,6 +18,15 @@ CXXFLAGS += -std=c++0x -D_GNU_SOURCE -D__STDC_FORMAT_MACROS
 
 PAM_DIR=/lib/security
 
+ifeq ($(DEB_VERSION), 6)
+OPTIONS = GLITE_LOCATION=/usr CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs" \
+          --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
+          --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
+	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
+	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
+          --libdir=/usr/lib --with-glite-lb=/usr  --enable-silent-rules --with-sched=none
+endif
+
 ifeq ($(DEB_VERSION), 7)
 OPTIONS = GLITE_LOCATION=/usr CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs" \
           --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
@@ -101,12 +110,13 @@ install: build
 
 ########torque-meta-server & torque-meta-scheduler
 	$(MAKE) -C debian/build/without-x install_server DESTDIR=$(CURDIR)/debian/torque-meta-server
-	
-	[ -d $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv ] && rm -r $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv
-	mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/sched_priv $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/
 
-	mv $(CURDIR)/debian/torque-meta-server/usr/sbin/qschedd $(CURDIR)/debian/torque-meta-server/usr/sbin/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/usr/sbin/
-#	mv $(CURDIR)/debian/torque-meta-server/etc/init.d/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/etc/init.d
+	# We are not compiling the scheduler for Debian 6
+	if [ "$(DEB_VERSION)" -neq "6" ]; then \
+		[ -d $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv ] && rm -r $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv; \
+		mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/sched_priv $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/; \
+		mv $(CURDIR)/debian/torque-meta-server/usr/sbin/qschedd $(CURDIR)/debian/torque-meta-server/usr/sbin/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/usr/sbin/; \
+	fi
 
 	# redundant with server package -> mv to -common 
 	if [ -r $(CURDIR)/debian/torque-meta-server/var/spool/torque/pbs_environment ]; then \
@@ -166,6 +176,12 @@ install: build
 
 	$(MAKE) -C debian/build/without-x install_doc DESTDIR=$(CURDIR)/debian/tmp
 
+	# We are not compiling the scheduler for Debian 6
+	if [ "$(DEB_VERSION)" -eq "6" ]; then \
+		rm -rf $(CURDIR)/debian/torque-meta-scheduler; \
+	fi
+
+
 	dh_install
 
 
@@ -180,7 +196,10 @@ binary-arch: install
 #	dh_installlogrotate	
 	dh_installinit -p torque-meta-mom --init-script=pbs_mom -r --no-start
 	dh_installinit -p torque-meta-server --init-script=pbs_server --no-start
-	dh_installinit -p torque-meta-scheduler --init-script=pbs_sched --no-start
+	# We are not compiling the scheduler for Debian 6
+	if [ "$(DEB_VERSION)" -neq "6" ]; then \
+		dh_installinit -p torque-meta-scheduler --init-script=pbs_sched --no-start; \
+	fi
 	dh_installcron
 #	dh_installinfo
 	dh_lintian

@@ -1,0 +1,145 @@
+Source: torque-meta
+Section: net
+Priority: optional
+Maintainer: Simon Toth <toth@fi.muni.cz>
+Uploaders: Simon Toth <toth@fi.muni.cz>
+Build-Depends: autotools-dev (>= 20100122.1~),
+               chrpath,
+               debhelper (>= 7),
+               libpam0g-dev,
+               libkvm-dev [kfreebsd-any],
+               openssh-client,
+               tcl8.5-dev,
+               tk8.5-dev,
+               heimdal-dev,
+               glite-lb-logger-dev,
+               libglite-lb-client-dev
+Standards-Version: 3.8.4
+DM-Upload-Allowed: yes
+XS-Autobuild: yes
+Vcs-Browser: http://svn.debian.org/wsvn/pkg-escience/torque/trunk/?rev=0&sc=0
+Vcs-Svn: svn://svn.debian.org/svn/pkg-escience/torque/trunk/
+Homepage: http://www.clusterresources.com/pages/products/torque/
+
+Package: torque-meta-common
+Section: utils
+Architecture: any
+Depends: ${misc:Depends}, base-files (>= 6)
+Recommends: torque-meta-client | torque-meta-server | torque-meta-mom, openssh-client
+Conflicts: torque-common
+Description: Torque Queueing System shared files
+ TORQUE (Tera-scale Open-source Resource and QUEue manager) is a resource
+ manager providing control over batch jobs and distributed compute
+ nodes. Torque is based on OpenPBS version 2.3.12 and incorporates
+ scalability, fault tolerance, and feature extension patches provided by
+ USC, NCSA, OSC, the U.S. Dept of Energy, Sandia, PNNL, U of Buffalo,
+ TeraGrid, and many other leading edge HPC organizations.
+ .
+ This package contains a series of files and directories that are shared
+ between client, server and mom, that can only be installed once.
+
+Package: torque-meta-server
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, glite-lb-logger, glite-lb-client, base-files (>= 6), libpbs-cache
+Recommends: torque-meta-scheduler, torque-meta-client | torque-meta-client-x11
+Suggests: torque-meta-mom
+Conflicts: torque-client
+Description: PBS-derived batch processing server
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ Torque stands for "Tera-scale Open-source Resource and QUEue manager".
+ It is based on OpenPBS version 2.3.12 and incorporates scalability,
+ fault tolerance, and feature extension patches provided by USC, NCSA,
+ OSC, the U.S. Dept of Energy, Sandia, PNNL, U of Buffalo, TeraGrid,
+ and many other leading edge HPC organizations.
+
+Package: torque-meta-pam
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, torque-meta-common, base-files (>= 6)
+Recommends: torque-meta-client | torque-meta-client-x11
+Conflicts: torque-pam
+Description: PAM module for PBS MOM nodes
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ A simple PAM module to authorize users on PBS MOM nodes with a running
+ job.
+
+Package: torque-meta-client
+Section: utils
+Architecture: any
+Conflicts: qterm, gridengine-client, torque-client, torque-meta-client-x11
+Depends: ${shlibs:Depends}, ${perl:Depends}, ${misc:Depends}, libcurses-perl, gawk, torque-meta-common, base-files (>= 6), pbs-cache-client
+Description: command line interface to Torque server
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ This package contains the command-line client programs. These should
+ be installed on all hosts that should be able to submit jobs,
+ query for their status or cancel their execution. The client
+ contacts the server directly.
+
+Package: torque-meta-mom
+Section: utils
+Architecture: any
+Build-Depends: libglite-lb-client-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, base-files (>= 6), pbs-cache-client
+Recommends: perun-slave-meta, glite-lb-logger
+Conflicts: torque-mom
+Description: job execution engine for Torque batch system
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ The pbs_mom daemon is executed on those machines that perform
+ the computations. This package should be installed on all these
+ execute hosts. The mom, the client and the server can all be
+ installed on the same machine.
+
+Package: torque-meta-client-x11
+Provides: torque-meta-client
+Conflicts: torque-client, qterm, gridengine-client, torque-meta-client
+Replaces: torque-gui
+Section: x11
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, libcurses-perl, gawk, torque-meta-common, base-files (>= 6)
+Description: GUI for torque clients
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ These clients feature the same functionality as their regular
+ counterparts and also allow for a graphical interaction.
+
+Package: libtorque-meta2
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, base-files (>= 6)
+Conflicts: libtorque2
+Description: shared library for Torque client and server
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ Clients, mom and server all share a certain set of shared libraries 
+ that are combined in this library.
+
+Package: libtorque-meta2-dev
+Section: libdevel
+Provides: libtorque-meta-dev
+Conflicts: libtorque-meta-dev, libtorque2-dev
+Architecture: any
+Depends: libtorque-meta2 (= ${binary:Version}), libkvm-dev [kfreebsd-any], ${shlibs:Depends}, ${misc:Depends}, base-files (>= 6)
+Description: header files for libtorque2
+ The TORQUE server dispatches jobs across physically separated
+ machines. It may also be beneficial for single machines to organise
+ the sequential execution of multiple jobs.
+ .
+ This package includes the header files and static libraries necessary for
+ developing programs which will use torque.
