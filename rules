@@ -112,7 +112,7 @@ install: build
 	$(MAKE) -C debian/build/without-x install_server DESTDIR=$(CURDIR)/debian/torque-meta-server
 
 	# We are not compiling the scheduler for Debian 6
-	if [ "$(DEB_VERSION)" -neq "6" ]; then \
+	if [ "$(DEB_VERSION)" -ne "6" ]; then \
 		[ -d $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv ] && rm -r $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv; \
 		mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/sched_priv $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/; \
 		mv $(CURDIR)/debian/torque-meta-server/usr/sbin/qschedd $(CURDIR)/debian/torque-meta-server/usr/sbin/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/usr/sbin/; \
@@ -197,7 +197,7 @@ binary-arch: install
 	dh_installinit -p torque-meta-mom --init-script=pbs_mom -r --no-start
 	dh_installinit -p torque-meta-server --init-script=pbs_server --no-start
 	# We are not compiling the scheduler for Debian 6
-	if [ "$(DEB_VERSION)" -neq "6" ]; then \
+	if [ "$(DEB_VERSION)" -ne "6" ]; then \
 		dh_installinit -p torque-meta-scheduler --init-script=pbs_sched --no-start; \
 	fi
 	dh_installcron

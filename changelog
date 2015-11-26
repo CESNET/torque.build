@@ -1,3 +1,9 @@
+torque-meta (2.4.147+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] fixed issue with job version mismatch
+
+ -- Simon Toth <simon@cesnet.cz>  Thu, 26 Nov 2015 12:40:00 +0100
+
 torque-meta (2.4.146+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] use memory utilization information from cgroup if available
