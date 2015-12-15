@@ -1,3 +1,11 @@
+torque-meta (2.4.148+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] -l home=xxx is now properly expanded into nodespec
+  * [server] -l scratch=xGB:shared now implies -l place=scratch_pool
+  * [package] LB support enabled on Debian 8
+
+ -- Simon Toth <simon@cesnet.cz>  Tue, 15 Dec 2015 15:45:00 +0100
+
 torque-meta (2.4.147+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] fixed issue with job version mismatch

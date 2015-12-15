@@ -42,7 +42,7 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs" \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
 	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/x86_64-linux-gnu/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
-          --libdir=/usr/lib --enable-silent-rules
+          --libdir=/usr/lib --enable-silent-rules --with-glite-lb=/usr
 endif
 
 configure: configure-stamp
