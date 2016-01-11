@@ -8,6 +8,7 @@ Type=forking
 ExecStart=/usr/sbin/pbs_server.start
 ExecStop=/usr/bin/qterm -t quick
 PIDFile=/var/spool/torque/server_priv/server.lock
+TimeoutStopSec=2400
 
 [Install]
 WantedBy=multi-user.target

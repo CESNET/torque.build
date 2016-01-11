@@ -7,6 +7,7 @@ After=local-fs.target named.target network.target pbs_server.service
 Type=forking
 ExecStart=/usr/sbin/pbs_sched
 PIDFile=/var/spool/torque/sched_priv/sched.lock
+TimeoutStopSec=2400
 
 [Install]
 WantedBy=multi-user.target
