@@ -1,3 +1,13 @@
+torque-meta (2.4.149+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] memory issues fixes
+  * [server] added core file generation to pbs_server.start script
+  * [lib] memory fix for string array attribute
+  * [server] report return value when acl could not be recovered
+  * [package] split scheduler into a separate package
+
+ -- Simon Toth <simon@cesnet.cz>  Wed, 3 Feb 2016 13:35:00 +0100
+
 torque-meta (2.4.148+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] -l home=xxx is now properly expanded into nodespec

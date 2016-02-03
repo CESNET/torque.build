@@ -95,7 +95,6 @@ install: build
 #	ln -s /etc/torque/server_name $(CURDIR)/debian/torque-meta-common/var/spool/torque/server_name
 
 	mkdir -p $(CURDIR)/debian/torque-meta-server/etc/init.d
-	mkdir -p $(CURDIR)/debian/torque-meta-scheduler/etc/init.d
 
 ########libtorque-meta2
 	$(MAKE) -C debian/build/without-x install_lib DESTDIR=$(CURDIR)/debian/libtorque-meta2
@@ -110,13 +109,6 @@ install: build
 
 ########torque-meta-server & torque-meta-scheduler
 	$(MAKE) -C debian/build/without-x install_server DESTDIR=$(CURDIR)/debian/torque-meta-server
-
-	# We are not compiling the scheduler for Debian 6
-	if [ "$(DEB_VERSION)" -ne "6" ]; then \
-		[ -d $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv ] && rm -r $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/sched_priv; \
-		mv $(CURDIR)/debian/torque-meta-server/var/spool/torque/sched_priv $(CURDIR)/debian/torque-meta-scheduler/var/spool/torque/; \
-		mv $(CURDIR)/debian/torque-meta-server/usr/sbin/qschedd $(CURDIR)/debian/torque-meta-server/usr/sbin/pbs_sched $(CURDIR)/debian/torque-meta-scheduler/usr/sbin/; \
-	fi
 
 	# redundant with server package -> mv to -common 
 	if [ -r $(CURDIR)/debian/torque-meta-server/var/spool/torque/pbs_environment ]; then \
@@ -177,10 +169,7 @@ install: build
 	$(MAKE) -C debian/build/without-x install_doc DESTDIR=$(CURDIR)/debian/tmp
 
 	# We are not compiling the scheduler for Debian 6
-	if [ "$(DEB_VERSION)" -eq "6" ]; then \
-		rm -rf $(CURDIR)/debian/torque-meta-scheduler; \
-	fi
-
+	rm -rf $(CURDIR)/debian/torque-meta-scheduler;
 
 	dh_install
 
@@ -196,10 +185,6 @@ binary-arch: install
 #	dh_installlogrotate	
 	dh_installinit -p torque-meta-mom --init-script=pbs_mom -r --no-start
 	dh_installinit -p torque-meta-server --init-script=pbs_server --no-start
-	# We are not compiling the scheduler for Debian 6
-	if [ "$(DEB_VERSION)" -ne "6" ]; then \
-		dh_installinit -p torque-meta-scheduler --init-script=pbs_sched --no-start; \
-	fi
 	dh_installcron
 #	dh_installinfo
 	dh_lintian
