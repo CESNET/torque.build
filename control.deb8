@@ -68,16 +68,6 @@ Description: PAM module for PBS MOM nodes
  A simple PAM module to authorize users on PBS MOM nodes with a running
  job.
 
-Package: torque-meta-scheduler
-Architecture: any
-Depends: ${misc:Depends}, torque-meta-common, base-files (>= 6), libpbs-cache, pbs-cache-server
-Conflicts: torque-scheduler
-Description: scheduler part of Torque
- The TORQUE server dispatches jobs across physically separated
- machines. It may also be beneficial for single machines to organise
- the sequential execution of multiple jobs.
- .
- This package contains the fifo C scheduler.
 
 Package: torque-meta-client
 Section: utils

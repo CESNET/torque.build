@@ -1,3 +1,0 @@
-#!/bin/sh
-
-/usr/bin/find /var/spool/torque/sched_logs -type f -not -name \*.gz -not -name `/bin/date +%Y%m%d` -exec /bin/gzip -9 {} \;
