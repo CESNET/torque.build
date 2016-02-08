@@ -1,3 +1,10 @@
+torque-meta (2.4.150+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] cgroup now limits memory+swap instead of just physical memory
+  * [server] fixed string array attribute duplicate code
+
+ -- Simon Toth <simon@cesnet.cz>  Mon, 8 Feb 2016 15:30:00 +0100
+
 torque-meta (2.4.149+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] memory issues fixes
