@@ -1,3 +1,11 @@
+torque-meta (2.4.151+DEBIAN_VERSION) unstable; urgency=low
+
+  * [all] removed LB support
+  * [server] fixed memory leak
+  * [server] changed behavior of job archive (copy files instead of rename)
+
+ -- Simon Toth <simon@cesnet.cz>  Mon, 29 Feb 2016 22:00:00 +0100
+
 torque-meta (2.4.150+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] cgroup now limits memory+swap instead of just physical memory
