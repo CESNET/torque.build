@@ -1,3 +1,10 @@
+torque-meta (2.4.153+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] memory leak fixes
+  * [package] added new pbs_server.stop nanny script
+
+ -- Simon Toth <simon@cesnet.cz>  Mon, 14 Mar 2016 14:00:00 +0100
+
 torque-meta (2.4.152+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] memory leak fixes
