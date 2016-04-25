@@ -1,3 +1,10 @@
+torque-meta (2.4.156+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] added new ignore_properties server attribute
+  * [mom] improved handling of cgroup misconfiguration
+
+ -- Simon Toth <simon@cesnet.cz>  Mon, 25 Apr 2016 11:00:00 +0100
+
 torque-meta (2.4.155+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] script for checking GPU allocation consistency
