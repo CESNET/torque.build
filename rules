@@ -23,7 +23,7 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs -lrt" \
           --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
-	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
+	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/heimdal --with-gssapi_inc=/usr/include/heimdal --with-krb525_lib=/usr/lib/heimdal --enable-meta-fork \
           --libdir=/usr/lib --enable-silent-rules --with-sched=none
 endif
 
@@ -32,7 +32,7 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs -lrt" \
           --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
-	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
+	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/x86_64-linux-gnu/heimdal --with-gssapi_inc=/usr/include/heimdal --with-krb525_lib=/usr/lib/heimdal --enable-meta-fork \
           --libdir=/usr/lib --enable-silent-rules
 endif
 
@@ -41,7 +41,7 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs -lrt" \
           --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
-	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/x86_64-linux-gnu/heimdal --with-gssapi_inc=/usr/include/heimdal --enable-meta-fork \
+	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/x86_64-linux-gnu/heimdal --with-gssapi_inc=/usr/include/heimdal --with-krb525_lib=/usr/lib/x86_64-linux-gnu/heimdal --enable-meta-fork \
           --libdir=/usr/lib --enable-silent-rules
 endif
 
