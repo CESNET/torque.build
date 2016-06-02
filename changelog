@@ -1,3 +1,13 @@
+torque-meta (2.4.158+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] removed significant memory leak in GSSAPI handling
+  * [server] removed job file syncing on server start
+  * [server] descreased timeout times in main socket loop
+  * [server] main socket loop now processes all waiting connections
+  * [mom] scratch dead space is now correctly reset to zero
+
+ -- Simon Toth <simon@cesnet.cz>  Thu, 2 Jun 2016 12:30:00 +0100
+
 torque-meta (2.4.157+DEBIAN_VERSION) unstable; urgency=low
 
   * [all] rewritten GSSAPI support (replaced deprecated calls, fixed memory
