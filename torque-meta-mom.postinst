@@ -10,7 +10,7 @@ RECALC=$((RANDOM%60));
 COREC=$((RANDOM%60));
 CHECKGPU=$((RANDOM%5));
 
-echo "MAILTO=toth@fi.muni.cz" >/etc/cron.d/torque-meta-mom
+echo "MAILTO=vchlumsky@cesnet.cz" >/etc/cron.d/torque-meta-mom
 echo "${REPORT}-59/5 * * * * root /var/spool/torque/mom_scripts/report_scratch" >>/etc/cron.d/torque-meta-mom
 echo "${RECHECK}-59/30 * * * * root /var/spool/torque/mom_scripts/recheck_leftover_scratch" >>/etc/cron.d/torque-meta-mom
 echo "${OVERLIM}-59/30 * * * * root /var/spool/torque/mom_scripts/check_scratch_usage" >>/etc/cron.d/torque-meta-mom

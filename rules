@@ -33,7 +33,7 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs -lrt" \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
 	  --with-krb5-config=/usr/bin/krb5-config.heimdal --with-krb525_lib=/usr/lib/heimdal --enable-meta-fork \
-          --libdir=/usr/lib --enable-silent-rules
+          --libdir=/usr/lib --enable-silent-rules --with-sched=none
 endif
 
 ifeq ($(DEB_VERSION), 8)
@@ -41,9 +41,8 @@ OPTIONS = CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="-Wl,-z,defs -lrt" \
           --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
           --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --with-pam=$(PAM_DIR) --with-sendmail=/usr/sbin/sendmail \
 	  --disable-static --enable-rpp --with-rcp=scp --with-default-server=arien.ics.muni.cz --with-debug \
-	  --with-krb5-config=/usr/bin/krb5-config.heimdal --with-krb525_lib=/usr/lib/x86_64-linux-gnu/heimdal
-	  --with-gssapi_bin=/usr/bin/ --with-gssapi_lib=/usr/lib/x86_64-linux-gnu/heimdal --with-gssapi_inc=/usr/include/heimdal --with-krb525_lib=/usr/lib/x86_64-linux-gnu/heimdal --enable-meta-fork \
-          --libdir=/usr/lib --enable-silent-rules
+	  --with-krb5-config=/usr/bin/krb5-config.heimdal --with-krb525_lib=/usr/lib/x86_64-linux-gnu/heimdal --enable-meta-fork \
+          --libdir=/usr/lib --enable-silent-rules --with-sched=none
 endif
 
 configure: configure-stamp
