@@ -1,3 +1,11 @@
+torque-meta (2.4.159+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] fixed problem with p2p socket leaking
+  * [server] fixed issue with incorrect error checking
+  * [mom] improved logging of obit errors
+
+ -- Simon Toth <simon@cesnet.cz>  Thu, 25 Aug 2016 23:00:00 +0100
+
 torque-meta (2.4.158+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] removed significant memory leak in GSSAPI handling
