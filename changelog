@@ -1,3 +1,9 @@
+torque-meta (2.4.160+DEBIAN_VERSION) unstable; urgency=low
+
+  * [server] fix p2p socket leaking
+
+ -- Vaclav Chlumsky <vchlumsky@cesnet.cz>  Fri, 16 Sep 2016 23:00:00 +0100
+
 torque-meta (2.4.159+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] fixed problem with p2p socket leaking
