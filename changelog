@@ -1,3 +1,9 @@
+torque-meta (2.4.161+DEBIAN_VERSION) unstable; urgency=low
+
+  * [mom] remove "Recommends: perun-slave-meta"
+
+ -- Vaclav Chlumsky <vchlumsky@cesnet.cz>  Mon, 19 Sep 2016 23:00:00 +0100
+ 
 torque-meta (2.4.160+DEBIAN_VERSION) unstable; urgency=low
 
   * [server] fix p2p socket leaking

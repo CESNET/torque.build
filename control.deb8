@@ -88,7 +88,6 @@ Package: torque-meta-mom
 Section: utils
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-3), torque-meta-common, base-files (>= 6), pbs-cache-client
-Recommends: perun-slave-meta
 Conflicts: torque-mom
 Description: job execution engine for Torque batch system
  The TORQUE server dispatches jobs across physically separated
