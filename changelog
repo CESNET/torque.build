@@ -1,3 +1,13 @@
+torque-meta (2.4.162+DEBIAN_VERSION) unstable; urgency=low
+
+  * [all] add addr check to req_authenuser
+  * [mom] kill job fix
+  * [server] server wait_request timeout increased
+  * [all] qsub man page fix
+  * [mom] useless home checking removed
+
+ -- Vaclav Chlumsky <vchlumsky@cesnet.cz>  Mon, 5 Dec 2016 23:00:00 +0100
+ 
 torque-meta (2.4.161+DEBIAN_VERSION) unstable; urgency=low
 
   * [mom] remove "Recommends: perun-slave-meta"
